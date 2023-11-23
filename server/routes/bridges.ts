@@ -42,6 +42,24 @@ router.post('/fav', async (req, res) => {
   }
 })
 
+//DELETE /api/v1/bridges/fav/:id
+router.delete('/fav/:id', async (req, res) => {
+  {
+    const id = parseInt(req.params.id)
+    if (isNaN(id)) {
+      res.status(400).send('Bad Request: ID must be a number')
+      return
+    }
+    try {
+      await dbFavBridge.deleteFavBridgeDb(id)
+      res.sendStatus(200)
+    } catch (err) {
+      console.log(err)
+      res.status(500).send('Could not delete favourite bridge!')
+    }
+  }
+})
+
 // GET /api/v1/bridges/:id
 router.get('/:id', async (req, res) => {
   const bridgeId = Number(req.params.id)

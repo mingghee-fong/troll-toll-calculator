@@ -19,3 +19,15 @@ export async function addFavBridgeDb(
     return err.message
   }
 }
+
+export async function deleteFavBridgeDb(
+  id: number,
+  db = connection
+): Promise<FavouriteBridge[]> {
+  try {
+    return db('favourite-bridges').where({ id: id }).delete()
+  } catch (err: any) {
+    console.log(err.message)
+    return err.message
+  }
+}

@@ -110,9 +110,7 @@ export async function seed(knex) {
       type: 'Viaduct',
       year_built: 1988,
       length_meters: 350,
-      added_by_user: 1, <button className="favourites">
-      <img src="img/favourite.png" alt="favourite" />
-    </button>
+      added_by_user: 1,
       image_url: 'bridgesimg/victoria-park-viaduct.jpg',
     },
     {

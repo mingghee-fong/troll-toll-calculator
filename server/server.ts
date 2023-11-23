@@ -13,6 +13,7 @@ const server = express()
 server.use(express.json())
 server.use(express.static(Path.join(__dirname, 'public')))
 
+server.use('/api/v1/bridges/fav', bridgeRoutes)
 server.use('/api/v1/bridges', bridgeRoutes)
 server.use('/api/v1/auth', authRoutes)
 
