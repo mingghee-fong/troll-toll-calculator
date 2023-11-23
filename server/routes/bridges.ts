@@ -6,6 +6,8 @@ const router = express.Router()
 
 // -- MVP -- //
 
+//GENERAL BRIDGES ROUTES
+
 // GET /api/v1/bridges
 router.get('/', async (req, res) => {
   try {
@@ -17,6 +19,19 @@ router.get('/', async (req, res) => {
   }
 })
 
+// GET /api/v1/bridges/:id (Single Bridge)
+router.get('/:id', async (req, res) => {
+  const bridgeId = Number(req.params.id)
+  try {
+    const bridge = await dbBridge.getBridgeByIdDb(bridgeId)
+    res.json(bridge)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
+//FAVOURITE BRIDGES ROUTES
 // GET /api/v1/bridges/fav
 router.get('/fav', async (req, res) => {
   try {
@@ -34,6 +49,7 @@ router.post('/fav', async (req, res) => {
   try {
     console.log("I'm being called")
     const bridge = req.body
+    console.log(bridge)
     const addedBridge = await dbFavBridge.addFavBridgeDb(bridge)
     res.json(addedBridge)
   } catch (error) {
@@ -57,18 +73,6 @@ router.delete('/fav/:id', async (req, res) => {
       console.log(err)
       res.status(500).send('Could not delete favourite bridge!')
     }
-  }
-})
-
-// GET /api/v1/bridges/:id
-router.get('/:id', async (req, res) => {
-  const bridgeId = Number(req.params.id)
-  try {
-    const bridge = await dbBridge.getBridgeByIdDb(bridgeId)
-    res.json(bridge)
-  } catch (error) {
-    console.error(error)
-    res.status(500).send('Something went wrong')
   }
 })
 

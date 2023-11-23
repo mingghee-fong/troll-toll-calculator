@@ -4,16 +4,16 @@ import { FavouriteBridge } from '../../models/favourite-bridges'
 export async function getFavBridgesDb(
   db = connection
 ): Promise<FavouriteBridge[]> {
-  console.log('Working!')
   return db('favourite-bridges').select('*')
 }
 
 export async function addFavBridgeDb(
   favBridge: number,
+
   db = connection
 ): Promise<FavouriteBridge[]> {
   try {
-    return db('favourite-bridges').insert(favBridge)
+    return db('favourite-bridges').insert(favBridge).select('*')
   } catch (err: any) {
     console.log(err.message)
     return err.message
