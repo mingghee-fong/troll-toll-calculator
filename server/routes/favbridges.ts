@@ -30,6 +30,20 @@ router.post('/', async (req, res) => {
   }
 })
 
+// POST /api/v1/bridges/fav/:user_id
+router.get('/:id', async (req, res) => {
+  try {
+    console.log('User Calling FavBridges')
+    const id = req.params.id
+    //console.log(id)
+    const getFavBridge = await dbFavBridge.getFavBridgesByUserIdDb(Number(id))
+    res.json(getFavBridge)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
 //DELETE /api/v1/bridges/fav/:id
 router.delete('/:id', async (req, res) => {
   {

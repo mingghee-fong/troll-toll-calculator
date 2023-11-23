@@ -20,6 +20,27 @@ export async function addFavBridgeDb(
   }
 }
 
+export async function getFavBridgesByUserIdDb(
+  user_id: number,
+  db = connection
+): Promise<FavouriteBridge> {
+  return db('favourite-bridges')
+    .join('bridges', 'bridges.id', 'favourite-bridges.bridge_id')
+    .select(
+      'bridge_id as bridgeId',
+      ' name',
+      ' location',
+      ' type',
+      '  year_built as yearBuilt',
+      ' length_meters as lengthMeters',
+      ' lanes',
+      ' added_by_user as addByUser',
+      ' toll_charge as tollCharge',
+      'image_url as imageUrl'
+    )
+    .where('user_id', user_id)
+}
+
 export async function deleteFavBridgeDb(
   id: number,
   db = connection

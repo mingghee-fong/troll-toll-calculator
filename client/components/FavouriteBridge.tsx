@@ -15,7 +15,6 @@ export default function FavouriteBridge() {
     //}
   }
 
-
   return (
     <>
       <button className="favourites" onClick={handleClick}>
