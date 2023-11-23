@@ -3,6 +3,7 @@ import * as Path from 'node:path'
 import * as URL from 'node:url'
 
 import bridgeRoutes from './routes/bridges.ts'
+import favRoutes from './routes/favbridges.ts'
 import authRoutes from './routes/auth.ts'
 
 const __filename = URL.fileURLToPath(import.meta.url)
@@ -14,7 +15,7 @@ server.use(express.urlencoded({ extended: true }))
 server.use(express.json())
 server.use(express.static(Path.join(__dirname, 'public')))
 
-server.use('/api/v1/bridges/fav', bridgeRoutes)
+server.use('/api/v1/fav', favRoutes)
 server.use('/api/v1/bridges', bridgeRoutes)
 server.use('/api/v1/auth', authRoutes)
 
