@@ -1,42 +1,49 @@
-import { getBridgesApi } from '../api/bridge.ts'
+import { UserFavouriteBridge } from '../../models/favourite-bridges.ts'
+import { getSingleBridgeApi } from '../api/bridge.ts'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
-import FavouriteBridge from './FavouriteBridge.tsx'
+import { Link, useParams } from 'react-router-dom'
 
-export default function BridgesList() {
+export default function UserFavouriteBridge() {
+  const { id } = useParams()
   const {
-    data: bridges,
-    error,
+    data: favbridges,
+    isError,
     isLoading,
-  } = useQuery({ queryKey: ['bridges'], queryFn: getBridgesApi })
+  }: {
+    data: UserFavouriteBridge[] | undefined
+    isError: boolean
+    isLoading: boolean
+  } = useQuery({
+    queryKey: ['favbridges', id],
+    queryFn: () => getSingleBridgeApi(Number(id)),
+  })
 
-  if (error) {
+  if (isError) {
     return <p>Your bridges are gone! What a massive error</p>
   }
-  if (!bridges || isLoading) {
+  if (!favbridges || isLoading) {
     return <p>Fetching bridges from auckland...</p>
   }
 
   return (
     <>
       <div>
-        <h1 id="bridgeTitle">Bridge Locations</h1>
+        <h1 id="bridgeTitle">Fav Bridge Locations</h1>
         <ul id="bridgeList">
-          {bridges.map((bridge) => {
+          {favbridges.map((bridge: any) => {
             return (
               <li key={bridge.id}>
                 <div className="bridgeBox">
                   <div>
                     <img
                       className="bridgeimages"
-                      src={`/bridgesimg/${bridge.imageUrl}`}
+                      src={bridge.imageUrl}
                       alt="bridge"
                     />
                   </div>
                   <button className="linkButton">
                     <Link to={`/bridge/${bridge.id}`}>{bridge.name}</Link>
                   </button>
-                  <FavouriteBridge />
                 </div>
               </li>
             )
