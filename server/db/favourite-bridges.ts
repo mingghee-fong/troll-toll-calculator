@@ -46,9 +46,11 @@ export async function deleteFavBridgeDb(
   db = connection
 ): Promise<FavouriteBridge[]> {
   try {
+
     return db('favourite-bridges').where({ id: id }).delete()
   } catch (err: any) {
     console.log(err.message)
     return err.message
+
   }
 }
