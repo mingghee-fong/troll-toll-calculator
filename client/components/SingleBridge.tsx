@@ -1,16 +1,30 @@
+import request from 'superagent'
 import { Bridge } from '../../models/bridge.ts'
 import { getSingleBridgeApi } from '../api/bridge.ts'
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
-
+import { Link, useParams } from 'react-router-dom'
+import { useState } from 'react'
 
 export default function SingleBridge() {
   const { id } = useParams()
+  const blinkStyle = {
+    animation: 'blinkingText 1.2s infinite',
+  }
+
+  const [estimate, setEstimate] = useState(0)
+
   const {
     data: bridge,
     isError,
     isLoading,
-  } : {data : Bridge | undefined, isError : boolean, isLoading : boolean}  = useQuery({ queryKey: ['bridges', id], queryFn: ()=> getSingleBridgeApi(Number(id)) })
+  }: {
+    data: Bridge | undefined
+    isError: boolean
+    isLoading: boolean
+  } = useQuery({
+    queryKey: ['bridges', id],
+    queryFn: () => getSingleBridgeApi(Number(id)),
+  })
 
   if (isError) {
     return <p>Your bridges are gone! What a massive error</p>
@@ -18,7 +32,23 @@ export default function SingleBridge() {
   if (!bridge || isLoading) {
     return <p>Fetching bridges from auckland...</p>
   }
-  console.log(bridge)
+
+  async function EstimateTollChange() {
+    console.log('making req')
+
+    request
+      .get(`/api/v1/maps/${id}`)
+      .then((result) => {
+        console.log(result)
+
+        setEstimate(result.body.estimate)
+      })
+      .catch((err) => {
+        throw err
+      })
+  }
+
+  EstimateTollChange()
 
   return (
     <>
@@ -26,7 +56,7 @@ export default function SingleBridge() {
 
       <div className="single-bridge-container">
         <div className="single-bridge-left-div">
-          <img src="your-image.jpg" alt={bridge.name}></img>
+          <img src={`/bridgesimg/${bridge.imageUrl}`} alt={bridge.name}></img>
         </div>
         <div className="right-bridge-right-div">
           <p>
@@ -48,9 +78,24 @@ export default function SingleBridge() {
             <strong>Year Built:</strong> {bridge.yearBuilt}
           </p>
           <p>
-            <strong>Estimated Toll Earnings:</strong> {bridge.tollCharge}
+            <strong>
+              <span style={{ color: 'red', fontWeight: 'bold', ...blinkStyle }}>
+                LIVE
+              </span>{' '}
+              Estimated Toll Earnings:
+            </strong>
+
+            {estimate === 0 ? 'unknown' : `${Math.ceil(estimate)}Ȼ`}
+          </p>
+          <p>
+            <strong>Estimated Traffic:</strong> {bridge.busyness}
           </p>
         </div>
+      </div>
+      <div className="backButton">
+        <button>
+          <Link to="/bridges">Back</Link>
+        </button>
       </div>
     </>
   )
